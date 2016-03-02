@@ -1,0 +1,14 @@
+{
+  "name": "src",
+  "version": "0.0.0",
+  "description": "ERROR: No README data found!",
+  "main": "index.js",
+  "scripts": {
+      "start": "node server.express.js"
+  },
+  "author": "",
+  "license": "BSD",
+  "devDependencies": {
+    "express": "~4.13.4"
+  }
+}

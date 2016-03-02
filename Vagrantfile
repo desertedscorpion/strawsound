@@ -1,13 +1,13 @@
-cp # -*- mode: ruby -*-
+# -*- mode: ruby -*-
 # vi: set ft=ruby :
 Vagrant.configure(2) do |config|
   config.vm.box = "dummy"
   config.vm.define "initial" do |box|
-    box.vm.provision "shell", path: "provision.sh", args: "initial"
+    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"]]
     box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
     box.vm.provider :aws do |aws, override|
-      aws.access_key_id = "AKIAIWPQ4MGLXIUGAGZQ"
-      aws.secret_access_key = "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"
+      aws.access_key_id = ENV["ACCESS_KEY_ID"]
+      aws.secret_access_key = ENV["SECRET_ACCESS_KEY"]
       aws.keypair_name = "docker"
       aws.security_groups = ["docker"]
       aws.availability_zone = "us-east-1a"
@@ -21,11 +21,11 @@ Vagrant.configure(2) do |config|
     end
   end
   config.vm.define "testing" do |box|
-    box.vm.provision "shell", path: "provision.sh", args: "testing"
+    box.vm.provision "shell", path: "provision.sh", args: ["testing", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"]]
     box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
     box.vm.provider :aws do |aws, override|
-      aws.access_key_id = "AKIAIWPQ4MGLXIUGAGZQ"
-      aws.secret_access_key = "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"
+      aws.access_key_id = ENV["ACCESS_KEY_ID"]
+      aws.secret_access_key = ENV["SECRET_ACCESS_KEY"]
       aws.keypair_name = "docker"
       aws.security_groups = ["docker"]
       aws.availability_zone = "us-east-1a"
