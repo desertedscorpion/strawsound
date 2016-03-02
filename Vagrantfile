@@ -1,0 +1,41 @@
+cp # -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure(2) do |config|
+  config.vm.box = "dummy"
+  config.vm.define "initial" do |box|
+    box.vm.provision "shell", path: "provision.sh", args: "initial"
+    box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
+    box.vm.provider :aws do |aws, override|
+      aws.access_key_id = "AKIAIWPQ4MGLXIUGAGZQ"
+      aws.secret_access_key = "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"
+      aws.keypair_name = "docker"
+      aws.security_groups = ["docker"]
+      aws.availability_zone = "us-east-1a"
+      aws.tags = {
+        "Name" => "docker",
+        "Environment" => "initial"
+      }
+      aws.ami = "ami-02321068"
+      override.ssh.username = "fedora"
+      override.ssh.private_key_path = "docker.pem"
+    end
+  end
+  config.vm.define "testing" do |box|
+    box.vm.provision "shell", path: "provision.sh", args: "testing"
+    box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
+    box.vm.provider :aws do |aws, override|
+      aws.access_key_id = "AKIAIWPQ4MGLXIUGAGZQ"
+      aws.secret_access_key = "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"
+      aws.keypair_name = "docker"
+      aws.security_groups = ["docker"]
+      aws.availability_zone = "us-east-1a"
+      aws.tags = {
+        "Name" => "docker",
+        "Environment" => "testing"
+      }
+      aws.ami = "ami-02321068"
+      override.ssh.username = "fedora"
+      override.ssh.private_key_path = "docker.pem"
+    end
+  end
+end
