@@ -15,18 +15,40 @@ EOF
     done
     systemctl start firewalld.service &&
     systemctl enable firewalld.service &&
-    firewall-cmd --permanent --add-service=http &&
-    firewall-cmd --add-port=8080/tcp &&
-    systemctl reload firewalld &&
+    (cat <<EOF
+Update the system
+EOF
+    ) &&
+    while ! dnf update --assumeyes
+    do
+	sleep 1m &&
+	    true
+    done &&
     (cat <<EOF
 Install docker
 EOF
-     ) &&
+    ) &&
     while ! dnf install --assumeyes docker*
     do
 	sleep 1m &&
 	    true
     done &&
+    (cat <<EOF
+Start and enable the docker service
+EOF
+    ) &&
+    systemctl start docker.service &&
+    systemctl enable docker.service &&
+    (cat <<EOF
+Add the user to the docker group for sudo free usage
+The docker group does not already exist.
+We must restart the docker service in order for the user to be able
+to use it.
+EOF
+    ) &&
+    groupadd docker &&
+    usermod -a -G docker fedora &&
+    systemctl restart docker.service &&
     (cat <<EOF
 Install git.
 Configure git.
@@ -82,7 +104,7 @@ EOF
     ) &&
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&
-    su --login fedora --command git clone git@github.com:AFnRFCb7/docker.git &&
+    su --login fedora --command "git clone git@github.com:AFnRFCb7/docker.git" &&
     (cat <<EOF
 ENJOY!
 EOF
