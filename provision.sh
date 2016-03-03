@@ -104,7 +104,8 @@ EOF
     ) &&
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&
-    su --login fedora --command "git clone git@github.com:AFnRFCb7/docker.git" &&
+    su --login fedora --command "mkdir working" &&
+    su --login fedora --command "git -C working clone git@github.com:AFnRFCb7/jenkins-docker.git" &&
     (cat <<EOF
 ENJOY!
 EOF

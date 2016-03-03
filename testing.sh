@@ -25,7 +25,10 @@ echo Test the docker provisioning script. &&
     vagrant ssh testing -- "groups | grep docker" &&
     echo Verify that the regular user can run without sudo. &&
     vagrant ssh testing -- "docker info" &&
-    vagrant ssh testing -- "if [ ! -d /home/fedora/docker ] ; then exit 64; fi" &&
+    WORKING_DIR=$(mktemp -d) &&
+    tar --create --file ${WORKING_DIR}/helloworld.tar helloworld &&
+    vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
+    vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no jenkins-docker directory && exit 65; fi" &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
