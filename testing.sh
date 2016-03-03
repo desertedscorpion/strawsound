@@ -26,9 +26,9 @@ echo Test the docker provisioning script. &&
     echo Verify that the regular user can run without sudo. &&
     vagrant ssh testing -- "docker info" &&
     vagrant ssh testing -- "mkdir testing" &&
-    vagrant ssh testing -- "git -C testing clone git@github.com:AFnRFCb7/helloworld.git" &&
+    vagrant ssh testing -- "git -C testing clone git@github.com:AFnRFCb7/docker.git" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/testing ]] ; then echo no testing directory && exit 64; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/testing/helloworld ]] ; then echo no testing/helloworld directory && exit 64; fi" &&
+    vagrant ssh testing -- "if [[ ! -d /home/fedora/testing/docker ]] ; then echo no testing/docker directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
     (
