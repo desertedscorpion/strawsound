@@ -92,6 +92,8 @@ EOF
 	    exit 64 &&
 	    true
     fi &&
+    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
+    vagrant ssh testing -- "curl http://localhost:3000" > ${WORK_DIR}/curl.txt 2>&1 &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
     (
