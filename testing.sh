@@ -1,6 +1,16 @@
 #!/bin/bash
 
-echo Test the docker provisioning script. &&
+(cat <<EOF
+Test the docker provisioning script.
+We destroy the docker testing instance (if it exists).
+Then create it fresh.
+We verify that the machine has been recently updated.
+We verify that we can use docker.
+We verify that a certain set of git projects have been cloned.
+(Whether those projects work or not is outside the scope of this test.)
+Then we destroy the docker testing instance.
+EOF
+) &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
@@ -25,10 +35,63 @@ echo Test the docker provisioning script. &&
     vagrant ssh testing -- "groups | grep docker" &&
     echo Verify that the regular user can run without sudo. &&
     vagrant ssh testing -- "docker info" &&
+    (cat <<EOF
+Here we are cloning a simple hello world application.
+Then we will try to use it.
+We are following http://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html to a large extent.
+EOF
+    ) &&
     vagrant ssh testing -- "mkdir testing" &&
-    vagrant ssh testing -- "git -C testing clone git@github.com:AFnRFCb7/docker.git" &&
+    vagrant ssh testing -- "git -C testing clone git@github.com:AFnRFCb7/docker-helloworld.git" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/testing ]] ; then echo no testing directory && exit 64; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/testing/docker ]] ; then echo no testing/docker directory && exit 64; fi" &&
+    vagrant ssh testing -- "if [[ ! -d /home/fedora/testing/docker-helloworld ]] ; then echo no testing/docker directory && exit 64; fi" &&
+#    (cat <<EOF
+#for the sake of sanity let us first test the node application independently of docker &&
+#it is a minor kludge that we are installing and removing npm and node
+#we have to install npm and node to sanity check.
+#it would be better if we did not have to install anything because later when
+#we test docker maybe just maybe docker needs npm and node to run
+#(in which case the provisioning script should install them)
+#but the tests pass because the testing script installed them.
+#we are removing npm and node because of this
+#but it would just be better if we did not have to install anything.
+#TODO a helloworld application without dependencies
+#EOF
+#    ) &&
+#    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && sudo dnf install --assumeyes npm node && ./test-node.sh && sudo dnf remove --assumeyes npm node && echo REMOVED" &&
+    echo build the docker image from the Dockerfile &&
+    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld ." &&
+    echo verify that the image was created correctly and that the image file contains a repository we can push to && 
+    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker images" &&
+    WORK_DIR=$(mktemp -d) &&
+    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker images" > ${WORK_DIR}/images.txt 2>&1 &&
+    (cat <<EOF
+We are testing that the images output has 3 lines and the second line has the test image repository.
+The output should look like
+
+REPOSITORY                                         TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld   latest              3054725ef24a        13 minutes ago      490.4 MB
+docker.io/centos                                   centos6             ed452988fb6e        19 hours ago        228.9 MB
+
+
+THe first line is just header.
+The second line is about our test project.
+The third line is a layer underneath our test project.
+EOF
+     ) &&
+    if [[ "3" != $(wc --lines ${WORK_DIR}/images.txt | cut --fields 1 --delimiter " ") ]]
+    then
+	echo the images should consist of 3 lines &&
+	    cat ${WORK_DIR}/images.txt &&
+	    exit 64 &&
+	    true
+    elif [[ "taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld" != $(head ${WORK_DIR}/images.txt --lines 2 | tail --lines 1 | cut --fields 1 --delim " ") ]]
+    then
+	echo the images should have the test repository &&
+	    cat ${WORK_DIR}/images.txt &&
+	    exit 64 &&
+	    true
+    fi &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
     (
