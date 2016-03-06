@@ -1,6 +1,7 @@
 #!/bin/bash
 
-(cat <<EOF
+source credentials.sh &&
+    (cat <<EOF
 Test the docker provisioning script.
 We destroy the docker testing instance (if it exists).
 Then create it fresh.
