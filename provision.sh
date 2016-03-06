@@ -104,8 +104,11 @@ EOF
     ) &&
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&
-    su --login fedora --command "mkdir working" &&
-    su --login fedora --command "git -C working clone git@github.com:AFnRFCb7/jenkins-docker.git" &&
+    su --login fedora --command "mkdir --parents working/{jenkins-docker,systemd}" &&
+    su --login fedora --command "git -C working/jenkins-docker init" &&
+    su --login fedora --command "git -C working/jenkins-docker remote add github git@github.com:AFnRFCb7/jenkins-docker.git" &&
+    su --login fedora --command "git -C working/systemd init" &&
+    su --login fedora --command "git -C working/systemd remote add github git@github.com:AFnRFCb7/microphonegolden.git" &&
     (cat <<EOF
 ENJOY!
 EOF

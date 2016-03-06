@@ -95,7 +95,8 @@ Let us verify that all our working stuff is there.
 EOF
      ) &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
+    vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker/.git ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
+    vagrant ssh testing -- "if [[ ! -d /home/fedora/working/systemd/.git ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
