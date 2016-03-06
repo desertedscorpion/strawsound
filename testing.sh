@@ -44,9 +44,13 @@ EOF
     ) &&
     vagrant ssh testing -- "mkdir testing" &&
     WORK_DIR=$(mktemp -d) &&
-    tar --create --file ${WORK_DIR}/helloworld.tar helloworld &&
-    vagrant scp ${WORK_DIR}/helloworld.tar testing:/tmp &&
-    vagrant ssh testing -- "tar --directory testing --extract --file /tmp/helloworld.tar" &&
+    tar --create --file ${WORK_DIR}/testing.tar testing &&
+    vagrant scp ${WORK_DIR}/testing.tar testing:/tmp &&
+    vagrant ssh testing -- "tar --extract --file /tmp/testing.tar" &&
+    (cat <<EOF
+Let us test with a simple node application.
+EOF
+    ) &&
     echo build the docker image from the Dockerfile &&
     vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld ." &&
     echo verify that the image was created correctly and that the image file contains a repository we can push to && 
@@ -86,6 +90,10 @@ EOF
 	    exit 64
 	    true
     fi &&
+    (cat <<EOF
+Let us verify that all our working stuff is there.
+EOF
+     ) &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
     (
