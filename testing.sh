@@ -42,29 +42,14 @@ We are following http://docs.aws.amazon.com/AmazonECS/latest/developerguide/dock
 EOF
     ) &&
     vagrant ssh testing -- "mkdir testing" &&
-    vagrant ssh testing -- "git -C testing clone git@github.com:AFnRFCb7/docker-helloworld.git" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/testing ]] ; then echo no testing directory && exit 64; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/testing/docker-helloworld ]] ; then echo no testing/docker directory && exit 64; fi" &&
-#    (cat <<EOF
-#for the sake of sanity let us first test the node application independently of docker &&
-#it is a minor kludge that we are installing and removing npm and node
-#we have to install npm and node to sanity check.
-#it would be better if we did not have to install anything because later when
-#we test docker maybe just maybe docker needs npm and node to run
-#(in which case the provisioning script should install them)
-#but the tests pass because the testing script installed them.
-#we are removing npm and node because of this
-#but it would just be better if we did not have to install anything.
-#TODO a helloworld application without dependencies
-#EOF
-#    ) &&
-#    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && sudo dnf install --assumeyes npm node && ./test-node.sh && sudo dnf remove --assumeyes npm node && echo REMOVED" &&
-    echo build the docker image from the Dockerfile &&
-    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld ." &&
-    echo verify that the image was created correctly and that the image file contains a repository we can push to && 
-    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker images" &&
     WORK_DIR=$(mktemp -d) &&
-    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker images" > ${WORK_DIR}/images.txt 2>&1 &&
+    tar --create --file ${WORK_DIR}/helloworld.tar helloworld &&
+    vagrant scp ${WORK_DIR}/helloworld.tar testing:/tmp &&
+    vagrant ssh testing -- "tar --directory testing --extract --file /tmp/helloworld.tar" &&
+    echo build the docker image from the Dockerfile &&
+    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld ." &&
+    echo verify that the image was created correctly and that the image file contains a repository we can push to && 
+    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker images" > ${WORK_DIR}/images.txt 2>&1 &&
     (cat <<EOF
 We are testing that the images output has 3 lines and the second line has the test image repository.
 The output should look like
@@ -92,7 +77,7 @@ EOF
 	    exit 64 &&
 	    true
     fi &&
-    vagrant ssh testing -- "cd /home/fedora/testing/docker-helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
+    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
     vagrant ssh testing -- "curl http://localhost:3000" > ${WORK_DIR}/curl.txt 2>&1 &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
