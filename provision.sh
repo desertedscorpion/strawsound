@@ -55,7 +55,7 @@ Configure git.
 Clone our repo from github.
 EOF
      ) &&
-    while ! dnf install --assumeyes docker* git
+    while ! dnf install --assumeyes git
     do
 	sleep 1m &&
 	    true
@@ -107,8 +107,12 @@ EOF
     su --login fedora --command "mkdir --parents working/{jenkins-docker,systemd}" &&
     su --login fedora --command "git -C working/jenkins-docker init" &&
     su --login fedora --command "git -C working/jenkins-docker remote add github git@github.com:AFnRFCb7/jenkins-docker.git" &&
+    su --login fedora --command "git -C working/jenkins-docker fetch github master" &&
+    su --login fedora --command "git -C working/jenkins-docker checkout master" &&
     su --login fedora --command "git -C working/systemd init" &&
     su --login fedora --command "git -C working/systemd remote add github git@github.com:AFnRFCb7/microphonegolden.git" &&
+    su --login fedora --command "git -C working/systemd fetch github master" &&
+    su --login fedora --command "git -C working/systemd checkout master" &&
     (cat <<EOF
 ENJOY!
 EOF
