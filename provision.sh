@@ -113,6 +113,12 @@ EOF
     su --login fedora --command "git -C working/systemd remote add github git@github.com:AFnRFCb7/microphonegolden.git" &&
     su --login fedora --command "git -C working/systemd fetch github master" &&
     su --login fedora --command "git -C working/systemd checkout master" &&
+    echo install emacs - my favorite editor &&
+    while ! dnf install --assumeyes emacs
+    do
+	sleep 60s &&
+	    true
+    done	
     (cat <<EOF
 ENJOY!
 EOF
