@@ -100,6 +100,7 @@ EOF
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/systemd/.git ]] ; then echo no working/systemd directory && exit 65; fi" &&
     vagrant ssh testing -- "if [[ \"* master\" != \"\$(git -C /home/fedora/working/systemd branch)\" ]] ; then echo no working/systemd directory master && exit 65; fi" &&
     vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
+    vagrant ssh testing -- "if [[ \"Username: ${DOCKER_USERID}\" != \"\$(docker info | grep Username)\" ]] ; then echo not logged into docker && exit 67; fi" &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"

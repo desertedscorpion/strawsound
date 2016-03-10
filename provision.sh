@@ -1,9 +1,13 @@
 #!/bin/bash
 
-ENVIRONMENT=${1} &&
+ENVIRONMENT="${1}" &&
+    DOCKER_USERID="${2}" &&
+    DOCKER_PASSWORD="${3}" &&
+    DOCKER_EMAIL="${4}" &&
     (cat <<EOF
 Install and configure docker.
 Environment is ${ENVIRONMENT}.
+The Docker credentials are ${DOCKER_USERID}, ${DOCKER_PASSWORD}, and ${DOCKER_EMAIL}.
 
 We need to install, start, and enable firewalld because the minimal fedora cloud image does not have it.
 EOF
@@ -118,7 +122,10 @@ EOF
     do
 	sleep 60s &&
 	    true
-    done	
+    done
+    echo log into the default docker registry service
+    su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
+    su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
     (cat <<EOF
 ENJOY!
 EOF
