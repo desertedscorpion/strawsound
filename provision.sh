@@ -31,14 +31,67 @@ EOF
 	    true
     done &&
     (cat <<EOF
+Install aws command line tools.
+EOF
+     ) &&
+    while ! dnf install --assumeyes zip python wget
+    do
+	sleep 60s &&
+	    true
+    done &&
+    cd $(mktemp -d) &&
+    while ! curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+    do
+	sleep 60s &&
+	    true
+    done
+    unzip awscli-bundle.zip &&
+    ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
+    (cat <<EOF
+${ACCESS_KEY_ID}
+${SECRET_ACCESS_KEY}
+us-east-1
+text
+EOF
+    ) | /usr/local/bin/aws configure &&
+    (cat <<EOF
 Install docker
 EOF
-    ) &&
+    ) &&    
     while ! dnf install --assumeyes docker*
     do
 	sleep 1m &&
 	    true
     done &&
+    (cat <<EOF
+Let us delete every volume associated with name=docker environment=${ENVIRONMENT}
+Then we will create a new one.
+That way we can be sure there is only exactly one.
+EOF
+    ) &&
+    INSTANCE_ID=$(/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8) &&
+    /usr/local/bin/aws ec2 describe-volumes --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" | grep VOLUMES | wc --lines | grep VOLUMES | cut --fields 2 | while read VOLUME_ID
+    do
+	echo /usr/local/bin/aws ec2 delete-volume --volume-id ${VOLUME_ID} &&
+	    /usr/local/bin/aws ec2 delete-volume --volume-id ${VOLUME_ID} &&
+	    true
+    done &&
+    VOLUME_ID=$(/usr/local/bin/aws ec2 create-volume --size 10 --availability-zone us-east-1a | cut --fields 7) &&
+    echo /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} &&
+    /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} &&
+    sleep 1m &&
+    echo /usr/local/bin/aws ec2 attach-volume --volume-id ${VOLUME_ID} --instance-id ${INSTANCE_ID} --device /dev/xvdf &&
+    /usr/local/bin/aws ec2 attach-volume --volume-id ${VOLUME_ID} --instance-id ${INSTANCE_ID} --device /dev/xvdf &&
+    sleep 1m &&
+    sleep 60s &&
+    (cat <<EOF
+The docker volume is not formatted.
+Let's format it and mount it.
+EOF
+    ) &&
+    mkfs.ext4 /dev/xvdf &&
+    echo /dev/xvdf /var/lib/docker                   ext4    defaults,x-systemd.device-timeout=0 1 2 >> /etc/fstab &&
+    mount /var/lib/docker &&
     (cat <<EOF
 Start and enable the docker service
 EOF
@@ -110,68 +163,8 @@ EOF
     ) &&
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&
-    (cat <<EOF
-Install aws command line tools.
-EOF
-     ) &&
-    while ! dnf install --assumeyes zip python wget
-    do
-	sleep 60s &&
-	    true
-    done &&
-    cd $(mktemp -d) &&
-    while ! curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-    do
-	sleep 60s &&
-	    true
-    done
-    unzip awscli-bundle.zip &&
-    ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
-    (cat <<EOF
-${ACCESS_KEY_ID}
-${SECRET_ACCESS_KEY}
-us-east-1
-text
-EOF
-    ) | /usr/local/bin/aws configure &&
-    (cat <<EOF
-Use the aws tools to see if there is an appropriately tagged volume.
-If there is not, create and tag it.
-Either way attach it.
-EOF
-    ) &&
-    INSTANCE_ID=$(/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8) &&
-    VOLUME_COUNT=$(/usr/local/bin/aws ec2 describe-volumes --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" | grep VOLUMES | wc --lines ) &&
-    if [ ${VOLUME_COUNT} == 0 ]
-    then
-        VOLUME_ID=$(/usr/local/bin/aws ec2 create-volume --size 10 --availability-zone us-east-1a | cut --fields 7) &&
-            /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} &&
-            sleep 1m &&
-            /usr/local/bin/aws ec2 attach-volume --volume-id ${VOLUME_ID} --instance-id ${INSTANCE_ID} --device /dev/xvdf &&
-            sleep 1m &&
-            mkfs.ext4 /dev/xvdf &&
-            true
-    else
-        VOLUME_ID=$(/usr/local/bin/aws ec2 describe-volumes --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" | grep VOLUMES | cut --fields 8) &&
-            /usr/local/bin/aws ec2 attach-volume --volume-id ${VOLUME_ID} --instance-id ${INSTANCE_ID} --device /dev/xvdf &&
-            true
-    fi &&
-    sleep 60s &&
-    if [ -z "$(lsblk -f | grep xvdf | grep ext4)" ]
-    then
-        (cat <<EOF
-The docker volume is not formatted.
-Let's format it.
-EOF
-        ) &&
-            mkfs.ext4 /dev/xvdf &&
-            true
-    fi &&
-    echo /dev/xvdf /home/fedora/working                   ext4    defaults,x-systemd.device-timeout=0 1 2 >> /etc/fstab &&
-    su --login fedora --command "mkdir --parents working" &&
-    mount /home/fedora/working &&
-    chown fedora:fedora /home/fedora/working &&
-    su --login fedora --command "mkdir --parents working/{jenkins-docker,systemd}" &&
+    su --login fedora --command "mkdir --parents working/{jenkins-docker,systemd,desertedscorpion}" &&
+    su --login fedora --command "mkdir --parents working/desertedscorpion/abandonnedsmoke" &&
     su --login fedora --command "git -C working/jenkins-docker init" &&
     su --login fedora --command "git -C working/jenkins-docker remote add github git@github.com:AFnRFCb7/jenkins-docker.git" &&
     su --login fedora --command "git -C working/jenkins-docker fetch github master" &&
@@ -180,6 +173,10 @@ EOF
     su --login fedora --command "git -C working/systemd remote add github git@github.com:AFnRFCb7/microphonegolden.git" &&
     su --login fedora --command "git -C working/systemd fetch github master" &&
     su --login fedora --command "git -C working/systemd checkout master" &&
+    su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke init" &&
+    su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke remote add github git@github.com:desertedscorpion/abandonnedsmoke.git" &&
+    su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke fetch github master" &&
+    su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke checkout master" &&
     echo maybe later ... install emacs - my favorite editor &&
     echo log into the default docker registry service
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&

@@ -30,6 +30,14 @@ EOF
     fi &&
     echo There is a docker command. &&
     vagrant ssh testing -- which docker &&
+    echo Verify that we mounted a volume on /var/lib
+    (
+	[[ ! -z "$(vagrant ssh testing -- "df" | grep /dev/xvdf | grep /var/lib)" ]] || (
+	    echo no volume &&
+		exit 68 &&
+		true
+	)
+    ) &&
     echo The documer service is running. &&
     vagrant ssh testing -- "systemctl status docker.service | grep running" &&
     echo The regular user is a member of the docker group, so it can run without sudo. &&
@@ -96,13 +104,6 @@ Let us verify that all our working stuff is there.
 EOF
     ) &&
     (
-	[[ ! -z "$(vagrant ssh testing -- "df" | grep /dev/xvdf | grep /home/fedora/working)" ]] || (
-	    echo no volume &&
-		exit 68 &&
-		true
-	)
-    ) &&
-    (
 	vagrant ssh testing -- "[[ -d /home/fedora/working ]]" || (
 	    echo no working directory &&
 		exit 69 &&
@@ -138,6 +139,22 @@ EOF
 	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/systemd branch)\" ]]" || (
 	    echo no working/systemd master &&
 	    exit 73 &&
+	    true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/abandonnedsmoke/.git ]]" || (
+	    echo no working/desertedscorpion/abandonnedsmoke directory &&
+		exit 74 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/abandonnedsmoke branch)\" ]]" || (
+	    echo no working/desertedscorpion/abandonnedsmoke master &&
+	    exit 75 &&
 	    true
 	) &&
 	    true
