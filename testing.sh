@@ -95,14 +95,62 @@ EOF
 Let us verify that all our working stuff is there.
 EOF
     ) &&
-    vagrant ssh testing -- "if [[ -z \"\$(df | grep /dev/xvdf | grep /home/fedora/working)\" ]] ; then echo no volume && exit 68; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker/.git ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
-    vagrant ssh testing -- "if [[ \"* master\" != \"\$(git -C /home/fedora/working/jenkins-docker branch)\" ]] ; then echo no working/jenkins-docker directory master && exit 65; fi" &&
-    vagrant ssh testing -- "if [[ ! -d /home/fedora/working/systemd/.git ]] ; then echo no working/systemd directory && exit 65; fi" &&
-    vagrant ssh testing -- "if [[ \"* master\" != \"\$(git -C /home/fedora/working/systemd branch)\" ]] ; then echo no working/systemd directory master && exit 65; fi" &&
+    (
+	[[ ! -z "$(vagrant ssh testing -- "df" | grep /dev/xvdf | grep /home/fedora/working)" ]] || (
+	    echo no volume &&
+		exit 68 &&
+		true
+	)
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working ]]" || (
+	    echo no working directory &&
+		exit 69 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/jenkins-docker/.git ]]" || (
+	echo no working/jenkins-docker directory &&
+	    exit 70 &&
+	    true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/jenkins-docker branch)\" ]]" || (
+	    echo no working/jenkins-docker master &&
+		exit 71 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/systemd/.git ]]" || (
+	    echo no working/systemd directory &&
+		exit 72 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/systemd branch)\" ]]" || (
+	    echo no working/systemd master &&
+	    exit 73 &&
+	    true
+	) &&
+	    true
+    ) &&
 #    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
-    vagrant ssh testing -- "if [[ \"Username: ${DOCKER_USERID}\" != \"\$(docker info | grep Username)\" ]] ; then echo not logged into docker && exit 67; fi" &&
+    (
+	vagrant ssh testing -- "[[ \"Username: ${DOCKER_USERID}\" == \"\$(docker info | grep Username)\" ]]" || (
+	    echo not logged into docker &&
+		exit 74 &&
+		true
+	) &&
+	    true
+    ) &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
