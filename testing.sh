@@ -159,6 +159,54 @@ EOF
 	) &&
 	    true
     ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/strawsound/.git ]]" || (
+	    echo no working/desertedscorpion/strawsound directory &&
+		exit 74 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/strawsound branch)\" ]]" || (
+	    echo no working/desertedscorpion/strawsound master &&
+	    exit 75 &&
+	    true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/needlessbeta/.git ]]" || (
+	    echo no working/desertedscorpion/needlessbeta directory &&
+		exit 74 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/needlessbeta branch)\" ]]" || (
+	    echo no working/desertedscorpion/needlessbeta master &&
+	    exit 75 &&
+	    true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/braveoyster/.git ]]" || (
+	    echo no working/desertedscorpion/braveoyster directory &&
+		exit 74 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/braveoyster branch)\" ]]" || (
+	    echo no working/desertedscorpion/braveoyster master &&
+	    exit 75 &&
+	    true
+	) &&
+	    true
+    ) &&
 #    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
     (
 	vagrant ssh testing -- "[[ \"Username: ${DOCKER_USERID}\" == \"\$(docker info | grep Username)\" ]]" || (

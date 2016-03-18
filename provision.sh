@@ -164,7 +164,7 @@ EOF
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&
     su --login fedora --command "mkdir --parents working/{jenkins-docker,systemd,desertedscorpion}" &&
-    su --login fedora --command "mkdir --parents working/desertedscorpion/abandonnedsmoke" &&
+    su --login fedora --command "mkdir --parents working/desertedscorpion/{strawsound,abandonnedsmoke,needlessbeta,braveoyster}" &&
     su --login fedora --command "git -C working/jenkins-docker init" &&
     su --login fedora --command "git -C working/jenkins-docker remote add github git@github.com:AFnRFCb7/jenkins-docker.git" &&
     su --login fedora --command "git -C working/jenkins-docker fetch github master" &&
@@ -177,6 +177,18 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke remote add github git@github.com:desertedscorpion/abandonnedsmoke.git" &&
     su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke fetch github master" &&
     su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke checkout master" &&
+    su --login fedora --command "git -C working/desertedscorpion/strawsound init" &&
+    su --login fedora --command "git -C working/desertedscorpion/strawsound remote add github git@github.com:desertedscorpion/strawsound.git" &&
+    su --login fedora --command "git -C working/desertedscorpion/strawsound fetch github master" &&
+    su --login fedora --command "git -C working/desertedscorpion/strawsound checkout master" &&
+    su --login fedora --command "git -C working/desertedscorpion/needlessbeta init" &&
+    su --login fedora --command "git -C working/desertedscorpion/needlessbeta remote add github git@github.com:desertedscorpion/needlessbeta.git" &&
+    su --login fedora --command "git -C working/desertedscorpion/needlessbeta fetch github master" &&
+    su --login fedora --command "git -C working/desertedscorpion/needlessbeta checkout master" &&
+    su --login fedora --command "git -C working/desertedscorpion/braveoyster init" &&
+    su --login fedora --command "git -C working/desertedscorpion/braveoyster remote add github git@github.com:desertedscorpion/braveoyster.git" &&
+    su --login fedora --command "git -C working/desertedscorpion/braveoyster fetch github master" &&
+    su --login fedora --command "git -C working/desertedscorpion/braveoyster checkout master" &&
     echo maybe later ... install emacs - my favorite editor &&
     echo log into the default docker registry service
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
