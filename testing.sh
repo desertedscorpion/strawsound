@@ -35,6 +35,7 @@ EOF
     echo The regular user is a member of the docker group, so it can run without sudo. &&
     vagrant ssh testing -- "groups | grep docker" &&
     echo Verify that the regular user can run without sudo. &&
+    sleep 1m &&
     vagrant ssh testing -- "docker info" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
@@ -93,13 +94,14 @@ EOF
     (cat <<EOF
 Let us verify that all our working stuff is there.
 EOF
-     ) &&
+    ) &&
+    vagrant ssh testing -- "if [[ -z \"\$(df | grep /dev/xvdf | grep /home/fedora/working)\" ]] ; then echo no volume && exit 68; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working ]] ; then echo no working directory && exit 64; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/jenkins-docker/.git ]] ; then echo no working/jenkins-docker directory && exit 65; fi" &&
     vagrant ssh testing -- "if [[ \"* master\" != \"\$(git -C /home/fedora/working/jenkins-docker branch)\" ]] ; then echo no working/jenkins-docker directory master && exit 65; fi" &&
     vagrant ssh testing -- "if [[ ! -d /home/fedora/working/systemd/.git ]] ; then echo no working/systemd directory && exit 65; fi" &&
     vagrant ssh testing -- "if [[ \"* master\" != \"\$(git -C /home/fedora/working/systemd branch)\" ]] ; then echo no working/systemd directory master && exit 65; fi" &&
-    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
+#    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
     vagrant ssh testing -- "if [[ \"Username: ${DOCKER_USERID}\" != \"\$(docker info | grep Username)\" ]] ; then echo not logged into docker && exit 67; fi" &&
     (
 	vagrant destroy --force testing ||
