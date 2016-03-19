@@ -207,6 +207,8 @@ EOF
 	) &&
 	    true
     ) &&
+    echo verify emacs is installed &&
+    vagrant ssh testing -- which emacs &&
 #    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
     (
 	vagrant ssh testing -- "[[ \"Username: ${DOCKER_USERID}\" == \"\$(docker info | grep Username)\" ]]" || (
