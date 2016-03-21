@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source credentials.sh &&
+source /usr/local/src/private/credentials.sh &&
     (cat <<EOF
 Test the docker provisioning script.
 We destroy the docker testing instance (if it exists).
@@ -207,6 +207,10 @@ EOF
 	) &&
 	    true
     ) &&
+    echo verify git is configured with my name &&
+    [[ "Emory Merryman" == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") ]] &&
+    echo verify git is configured with my email &&
+    [[ "emory.merryman@gmail.com" == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+][^@]*##") ]] &&
     echo verify emacs is installed &&
     vagrant ssh testing -- which emacs &&
 #    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source credentials.sh &&
+source /usr/local/src/private/credentials.sh &&
     vagrant ssh initial &&
     true

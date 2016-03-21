@@ -189,6 +189,9 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion/braveoyster remote add github git@github.com:desertedscorpion/braveoyster.git" &&
     su --login fedora --command "git -C working/desertedscorpion/braveoyster fetch github master" &&
     su --login fedora --command "git -C working/desertedscorpion/braveoyster checkout master" &&
+    su --login fedora --command "git config --global user.name \"Emory Merryman\"
+" &&
+    su --login fedora --command "git config --global user.email emory.merryman+2N61ZmeAFB9TKDIP@gmail.com" &&
     echo install emacs - my favorite editor &&
     dnf install --assumeyes emacs &&
     echo log into the default docker registry service
