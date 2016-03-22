@@ -207,10 +207,12 @@ EOF
 	) &&
 	    true
     ) &&
-    echo verify git is configured with my name &&
-    [[ "Emory Merryman" == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") ]] &&
-    echo verify git is configured with my email &&
-    [[ "emory.merryman@gmail.com" == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+][^@]*##") ]] &&
+    GIT_NAME=$(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") &&    
+    echo verify git is configured with my name \"${GIT_NAME}\" &&
+    [[ "Emory Merryman" == ${GIT_NAME} ]] &&
+    GIT_EMAIL=$(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+].*@#@#") &&
+    echo verify git is configured with my email \"${GIT_EMAIL}\" &&
+    [[ "emory.merryman@gmail.com" == ${GIT_EMAIL} ]] &&
     echo verify emacs is installed &&
     vagrant ssh testing -- which emacs &&
 #    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
