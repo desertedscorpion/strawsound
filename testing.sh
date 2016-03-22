@@ -210,7 +210,7 @@ EOF
     GIT_NAME=$(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") &&    
     echo verify git is configured with my name \"${GIT_NAME}\" &&
     [[ "Emory Merryman" == ${GIT_NAME} ]] &&
-    GIT_EMAIL=$(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+].*@#@#") &&
+    GIT_EMAIL=$(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+].*@#@#") &&
     echo verify git is configured with my email \"${GIT_EMAIL}\" &&
     [[ "emory.merryman@gmail.com" == ${GIT_EMAIL} ]] &&
     echo verify emacs is installed &&
