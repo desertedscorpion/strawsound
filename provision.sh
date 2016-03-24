@@ -198,7 +198,7 @@ EOF
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
 	su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
 	echo install nodejs and npm so we can do some automated testing &&
-	while ! dnf install nodejs npm
+	while ! dnf install --assumeyes nodejs npm
 	do
 	    sleep 1m &&
 		true
