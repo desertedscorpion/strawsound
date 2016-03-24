@@ -225,7 +225,7 @@ EOF
 	    true
     ) &&
     echo verify nodejs is installed &&
-    vagrant ssh testing -- which nodejs &&
+    vagrant ssh testing -- which node &&
     echo verify npm is installed &&
     vagrant ssh testing -- which npm &&
     (
