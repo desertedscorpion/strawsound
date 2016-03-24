@@ -228,6 +228,12 @@ EOF
     vagrant ssh testing -- which node &&
     echo verify npm is installed &&
     vagrant ssh testing -- which npm &&
+    echo verify Xfvb is installed &&
+    vagrant ssh testing -- which Xvfb &&
+    echo verify recordmydesktop is installed &&
+    vagrant ssh testing -- which recordmydesktop &&
+    echo verify firefox is installed &&
+    vagrant ssh testing -- which firefox &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
