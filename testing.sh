@@ -224,6 +224,10 @@ EOF
 	) &&
 	    true
     ) &&
+    echo verify nodejs is installed &&
+    vagrant ssh testing -- which nodejs &&
+    echo verify npm is installed &&
+    vagrant ssh testing -- which npm &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
