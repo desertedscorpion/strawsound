@@ -83,9 +83,9 @@ The second line is about our test project.
 The third line is a layer underneath our test project.
 EOF
      ) &&
-    if [[ "3" != $(wc --lines ${WORK_DIR}/images.txt | cut --fields 1 --delimiter " ") ]]
+    if [[ "4" != $(wc --lines ${WORK_DIR}/images.txt | cut --fields 1 --delimiter " ") ]]
     then
-	echo the images should consist of 3 lines &&
+	echo the images should consist of 4 lines &&
 	    cat ${WORK_DIR}/images.txt &&
 	    exit 64 &&
 	    true
