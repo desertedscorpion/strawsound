@@ -194,16 +194,19 @@ EOF
     su --login fedora --command "git config --global user.email emory.merryman+2N61ZmeAFB9TKDIP@gmail.com" &&
     echo install emacs - my favorite editor &&
     dnf install --assumeyes emacs &&
-    echo log into the default docker registry service
+    echo log into the default docker registry service &&
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
-	su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
-	echo install nodejs and npm so we can do some automated testing &&
-	while ! dnf install --assumeyes nodejs npm xorg-x11-server-Xvfb recordmydesktop firefox
-	do
-	    sleep 1m &&
-		true
-	done &&
-	(cat <<EOF
+    su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
+    echo install nodejs and npm so we can do some automated testing &&
+    while ! dnf install --assumeyes nodejs npm xorg-x11-server-Xvfb recordmydesktop firefox
+    do
+	sleep 1m &&
+	    true
+    done &&
+    echo create directories for private info &&
+    mkdir /home/fedora/working/desertedscorpion/{abandonnedsmoke,strawsound}/private &&
+    chown fedora:fedora /home/fedora/working/desertedscorpion/{abandonnedsmoke,strawsound}/private &&
+    (cat <<EOF
 ENJOY!
 EOF
     ) &&
