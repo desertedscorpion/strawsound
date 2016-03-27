@@ -197,6 +197,14 @@ EOF
 	    true
     ) &&
     (
+	[[ ! -z $(vagrant ssh testing -- "docker images | taf7lwappqystqp4u7wjsqkdc7dquw/grimdog_systemd .") ]] || (
+	    echo the systemd docker image was not built &&
+		exit 75 &&
+		true
+	) &&
+	    true
+    ) &&
+    (
 	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/braveoyster/.git ]]" || (
 	    echo no working/desertedscorpion/braveoyster directory &&
 		exit 74 &&

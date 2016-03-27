@@ -185,6 +185,8 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion/needlessbeta remote add github git@github.com:desertedscorpion/needlessbeta.git" &&
     su --login fedora --command "git -C working/desertedscorpion/needlessbeta fetch github master" &&
     su --login fedora --command "git -C working/desertedscorpion/needlessbeta checkout master" &&
+    su --login fedora --command "cd working/desertedscorpion/needlessbeta && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/grimdog_jenkins ." &&
+    
     su --login fedora --command "git -C working/desertedscorpion/braveoyster init" &&
     su --login fedora --command "git -C working/desertedscorpion/braveoyster remote add github git@github.com:desertedscorpion/braveoyster.git" &&
     su --login fedora --command "git -C working/desertedscorpion/braveoyster fetch github master" &&
