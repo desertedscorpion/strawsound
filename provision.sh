@@ -196,8 +196,14 @@ EOF
     dnf install --assumeyes emacs &&
     echo log into the default docker registry service
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
-    su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
-    (cat <<EOF
+	su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
+	echo install nodejs and npm so we can do some automated testing &&
+	while ! dnf install --assumeyes nodejs npm xorg-x11-server-Xvfb recordmydesktop firefox
+	do
+	    sleep 1m &&
+		true
+	done &&
+	(cat <<EOF
 ENJOY!
 EOF
     ) &&
