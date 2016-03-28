@@ -8,6 +8,7 @@ ENVIRONMENT="${1}" &&
     SECRET_ACCESS_KEY="${6}" &&
     GITHUB_STRAWSOUND_PRIVATE_SSH_KEY="${7}" &&
     GITHUB_STRAWSOUND_PUBLIC_SSH_KEY="${8}" &&
+    GITNAME="${9}" &&
     (cat <<EOF
 Install and configure docker.
 Environment is ${ENVIRONMENT}.
@@ -121,7 +122,7 @@ EOF
 	sleep 1m &&
 	    true
     done &&
-    GITHUB_STRAWSOUND_SSH_KEYFILE=\$(mktemp /home/fedora/.ssh/XXXXXXXX_id_rsa) &&
+    GITHUB_STRAWSOUND_SSH_KEYFILE=$(mktemp /home/fedora/.ssh/XXXXXXXX_id_rsa) &&
     (
 	echo ${GITHUB_STRAWSOUND_PRIVATE_SSH_KEY} > \${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
     ) &&
@@ -136,7 +137,7 @@ StrictHostKeyChecking no
 
 EOF
     ) &&
-    su --login fedora --command "git config --global user.name \"Emory Merryman\"" &&
+    su --login fedora --command "git config --global user.name \"${GIT_NAME}\"" &&
     su --login fedora --command "git config --global user.email emory.merryman+\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)@gmail.com" &&
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&

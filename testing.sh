@@ -21,14 +21,15 @@ function finish(){
     ) &&
 	true
 } &&
-    trap finish EXIT &&
-    export DOCKER_USERID=$(cat private.testing/docker_userid) &&
-    export DOCKER_PASSWORD=$(cat private.testing/docker_password) &&
-    export DOCKER_EMAIL=$(cat private.testing/docker_email) &&
-    export ACCESS_KEY_ID=$(cat private.testing/access_key_id) &&
-    export SECRET_ACCESS_KEY=$(cat private.testing/secret_access_key) &&
-    export GITHUB_STRAWSOUND_PRIVATE_SSH_KEY=$(cat private.testing/OpGlyegL_id_rsa) &&
-    export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private.testing/OpGlyegL_id_rsa) &&
+trap finish EXIT &&
+export DOCKER_USERID=$(cat private/testing/docker/docker_userid) &&
+    export DOCKER_PASSWORD=$(cat private/testing/docker/docker_password) &&
+    export DOCKER_EMAIL=$(cat private/testing/docker/docker_email) &&
+    export ACCESS_KEY_ID=$(cat private/testing/aws/access_key_id) &&
+    export SECRET_ACCESS_KEY=$(cat private/testing/aws/secret_access_key) &&
+    export GITHUB_STRAWSOUND_PRIVATE_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa) &&
+    export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa.pub)
+    export GITNAME=$(cat private/testing/git/name) &&
     (cat <<EOF
 Test the docker provisioning script.
 We destroy the docker testing instance (if it exists).

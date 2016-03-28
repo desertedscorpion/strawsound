@@ -3,7 +3,7 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "dummy"
   config.vm.define "initial" do |box|
-    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"]]
+    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GIT_NAME"]]
     box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
     box.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV["ACCESS_KEY_ID"]
@@ -17,11 +17,11 @@ Vagrant.configure(2) do |config|
       }
       aws.ami = "ami-02321068"
       override.ssh.username = "fedora"
-      override.ssh.private_key_path = "docker.pem"
+      override.ssh.private_key_path = "private/initial/aws/docker.pem"
     end
   end
   config.vm.define "testing" do |box|
-    box.vm.provision "shell", path: "provision.sh", args: ["testing", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"]]
+    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GIT_NAME"]]
     box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
     box.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV["ACCESS_KEY_ID"]
@@ -35,7 +35,7 @@ Vagrant.configure(2) do |config|
       }
       aws.ami = "ami-02321068"
       override.ssh.username = "fedora"
-      override.ssh.private_key_path = "docker.pem"
+      override.ssh.private_key_path = "private/testing/aws/docker.pem"
     end
   end
 end
