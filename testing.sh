@@ -30,6 +30,7 @@ export DOCKER_USERID=$(cat private/testing/docker/docker_userid) &&
     export GITHUB_STRAWSOUND_PRIVATE_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa) &&
     export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa.pub)
     export GITNAME=$(cat private/testing/git/name) &&
+    export GITEMAIL=$(private/initial/git/email.sh) &&
     (cat <<EOF
 Test the docker provisioning script.
 We destroy the docker testing instance (if it exists).
@@ -101,10 +102,6 @@ EOF
 	    exit 64
 	    true
     fi &&
-    GIT_NAME=$(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") &&    
-    echo verify git is configured with my name \"${GIT_NAME}\" &&
-    [[ "Emory Merryman" == ${GIT_NAME} ]] &&
-    GIT_EMAIL=$(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+].*@#@#") &&
-    echo verify git is configured with my email \"${GIT_EMAIL}\" &&
-    [[ "emory.merryman@gmail.com" == ${GIT_EMAIL} ]] &&
+    [[ ${GITNAME} == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") ]] &&    
+    [[ ${GITEMAIL} == $(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##") ]] &&
     true

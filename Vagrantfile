@@ -3,7 +3,7 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "dummy"
   config.vm.define "initial" do |box|
-    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GIT_NAME"]]
+    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GITHUB_STRAWSOUND_PUBLIC_SSH_KEY"], ENV["GITNAME"], ENV["GITEMAIL"]]
     box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
     box.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV["ACCESS_KEY_ID"]
@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
     end
   end
   config.vm.define "testing" do |box|
-    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GIT_NAME"]]
+    box.vm.provision "shell", path: "provision.sh", args: ["initial", ENV["DOCKER_USERID"], ENV["DOCKER_PASSWORD"], ENV["DOCKER_EMAIL"], ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"], ENV["GITHUB_STRAWSOUND_PRIVATE_SSH_KEY"], ENV["GITHUB_STRAWSOUND_PUBLIC_SSH_KEY"], ENV["GITNAME"]]
     box.vm.synced_folder ".", "/vagrant", type: "rsync", disabled: true
     box.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV["ACCESS_KEY_ID"]

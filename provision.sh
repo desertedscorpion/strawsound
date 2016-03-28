@@ -9,6 +9,7 @@ ENVIRONMENT="${1}" &&
     GITHUB_STRAWSOUND_PRIVATE_SSH_KEY="${7}" &&
     GITHUB_STRAWSOUND_PUBLIC_SSH_KEY="${8}" &&
     GITNAME="${9}" &&
+    GITEMAIL="${10}" &&
     (cat <<EOF
 Install and configure docker.
 Environment is ${ENVIRONMENT}.
