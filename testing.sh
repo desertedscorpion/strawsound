@@ -29,8 +29,8 @@ EOF
     export ACCESS_KEY_ID=$(cat private/testing/aws/access_key_id) &&
     export SECRET_ACCESS_KEY=$(cat private/testing/aws/secret_access_key) &&
     export GITHUB_STRAWSOUND_PRIVATE_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa) &&
-    export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa.pub)
-export GITNAME=$(cat private/testing/git/name) &&
+    export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa.pub) &&
+    export GITNAME=$(cat private/testing/git/name) &&
     export GITEMAIL=$(private/initial/git/email.sh) &&
     (cat <<EOF
 Test the docker provisioning script.
