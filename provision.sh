@@ -152,8 +152,8 @@ EOF
     chmod 0600 /home/fedora/.ssh/config &&
     su --login fedora --command "git config --global user.name \"${GITNAME}\"" &&
     su --login fedora --command "git config --global user.email \"${GITEMAIL}\"" &&
+    echo configure docker &&
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
-    cat configure docker &&
     su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
     echo ENJOY!!!!!! &&
     true
