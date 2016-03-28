@@ -87,7 +87,7 @@ EOF
     echo let us dockerize for verification &&
     vagrant ssh testing -- mkdir --parents /home/fedora/testing/desertedscorpion
     echo Let us test with a simple node express hello world application &&
-    vagrant ssh testing -- git clone -C /home/fedora/testing/desertedscorpion git@github.com:desertedscorpion/subtleostrich.git &&
+    vagrant ssh testing -- git -C /home/fedora/testing/desertedscorpion clone git@github.com:desertedscorpion/subtleostrich.git &&
     echo build the docker image from the Dockerfile &&
     vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict ." &&
     echo verify that the image was created correctly and that the image file contains a repository we can push to &&
