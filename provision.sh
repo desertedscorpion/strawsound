@@ -3,14 +3,14 @@
 ENVIRONMENT="${1}" &&
     BRANCH="${2}" &&
     DOCKER_USERID="${3}" &&
-    DOCKER_PASSWORD="${5}" &&
-    DOCKER_EMAIL="${6}" &&
-    ACCESS_KEY_ID="${7}" &&
-    SECRET_ACCESS_KEY="${8}" &&
-    GITHUB_STRAWSOUND_PRIVATE_SSH_KEY="${9}" &&
-    GITHUB_STRAWSOUND_PUBLIC_SSH_KEY="${10}" &&
-    GITNAME="${11}" &&
-    GITEMAIL="${12}" &&
+    DOCKER_PASSWORD="${4}" &&
+    DOCKER_EMAIL="${5}" &&
+    ACCESS_KEY_ID="${6}" &&
+    SECRET_ACCESS_KEY="${7}" &&
+    GITHUB_STRAWSOUND_PRIVATE_SSH_KEY="${8}" &&
+    GITHUB_STRAWSOUND_PUBLIC_SSH_KEY="${9}" &&
+    GITNAME="${10}" &&
+    GITEMAIL="${11}" &&
     (cat <<EOF
 Install and configure docker.
 Environment is ${ENVIRONMENT}.
