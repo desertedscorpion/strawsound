@@ -1,20 +1,22 @@
 #!/bin/bash
 
 ENVIRONMENT="${1}" &&
-    DOCKER_USERID="${2}" &&
-    DOCKER_PASSWORD="${3}" &&
-    DOCKER_EMAIL="${4}" &&
-    ACCESS_KEY_ID="${5}" &&
-    SECRET_ACCESS_KEY="${6}" &&
-    GITHUB_STRAWSOUND_PRIVATE_SSH_KEY="${7}" &&
-    GITHUB_STRAWSOUND_PUBLIC_SSH_KEY="${8}" &&
-    GITNAME="${9}" &&
-    GITEMAIL="${10}" &&
+    BRANCH="${2}" &&
+    DOCKER_USERID="${3}" &&
+    DOCKER_PASSWORD="${5}" &&
+    DOCKER_EMAIL="${6}" &&
+    ACCESS_KEY_ID="${7}" &&
+    SECRET_ACCESS_KEY="${8}" &&
+    GITHUB_STRAWSOUND_PRIVATE_SSH_KEY="${9}" &&
+    GITHUB_STRAWSOUND_PUBLIC_SSH_KEY="${10}" &&
+    GITNAME="${11}" &&
+    GITEMAIL="${12}" &&
     (cat <<EOF
 Install and configure docker.
 Environment is ${ENVIRONMENT}.
 
 ENVIRONMENT=${ENVIRONMENT}
+ENVIRONMENT=${BRANCH}
 DOCKER_USERID=${DOCKER_USERID}
 DOCKER_PASSWORD=${DOCKER_PASSWORD}
 DOCKER_EMAIL=${DOCKER_EMAIL}
@@ -78,21 +80,21 @@ EOF
 	    true
     done &&
     (cat <<EOF
-Let us delete every volume associated with name=docker environment=${ENVIRONMENT}
+Let us delete every volume associated with name=docker environment=${ENVIRONMENT} branch=${BRANCH}
 Then we will create a new one.
 That way we can be sure there is only exactly one.
 EOF
     ) &&
-    INSTANCE_ID=$(/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8) &&
-    /usr/local/bin/aws ec2 describe-volumes --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" | grep VOLUMES | wc --lines | grep VOLUMES | cut --fields 2 | while read VOLUME_ID
+    INSTANCE_ID=$(/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=tag:Environment,Values=${BRANCH}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8) &&
+    /usr/local/bin/aws ec2 describe-volumes --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=tag:Environment,Values=${BRANCH}"  | grep VOLUMES | wc --lines | grep VOLUMES | cut --fields 2 | while read VOLUME_ID
     do
 	echo /usr/local/bin/aws ec2 delete-volume --volume-id ${VOLUME_ID} &&
 	    /usr/local/bin/aws ec2 delete-volume --volume-id ${VOLUME_ID} &&
 	    true
     done &&
     VOLUME_ID=$(/usr/local/bin/aws ec2 create-volume --size 10 --availability-zone us-east-1a | cut --fields 7) &&
-    echo /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} &&
-    /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} &&
+    echo /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} Key=Branch,Value=${BRANCH}  &&
+    /usr/local/bin/aws ec2 create-tags --resources ${VOLUME_ID} --tags Key=Name,Value=docker Key=Environment,Value=${ENVIRONMENT} Key=Branch,Value=${BRANCH} &&
     sleep 1m &&
     echo /usr/local/bin/aws ec2 attach-volume --volume-id ${VOLUME_ID} --instance-id ${INSTANCE_ID} --device /dev/xvdf &&
     /usr/local/bin/aws ec2 attach-volume --volume-id ${VOLUME_ID} --instance-id ${INSTANCE_ID} --device /dev/xvdf &&

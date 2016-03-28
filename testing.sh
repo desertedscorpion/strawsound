@@ -14,22 +14,23 @@ If we are still having multiple instances of the testing machine,
 then this code is not working.
 EOF
 ) &&
-function finish(){
-    (
-	vagrant destroy --force testing ||
-	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
-    ) &&
-	true
-} &&
-trap finish EXIT &&
-export DOCKER_USERID=$(cat private/testing/docker/docker_userid) &&
+    function finish(){
+	(
+	    vagrant destroy --force testing ||
+		echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
+	) &&
+	    true
+    } &&
+    trap finish EXIT &&
+    export BRANCH=$(git rev-parse --abbrev-ref HEAD) &&
+    export DOCKER_USERID=$(cat private/testing/docker/docker_userid) &&
     export DOCKER_PASSWORD=$(cat private/testing/docker/docker_password) &&
     export DOCKER_EMAIL=$(cat private/testing/docker/docker_email) &&
     export ACCESS_KEY_ID=$(cat private/testing/aws/access_key_id) &&
     export SECRET_ACCESS_KEY=$(cat private/testing/aws/secret_access_key) &&
     export GITHUB_STRAWSOUND_PRIVATE_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa) &&
     export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private/testing/github/strawsound_id_rsa.pub)
-    export GITNAME=$(cat private/testing/git/name) &&
+export GITNAME=$(cat private/testing/git/name) &&
     export GITEMAIL=$(private/initial/git/email.sh) &&
     (cat <<EOF
 Test the docker provisioning script.
@@ -41,7 +42,7 @@ We verify that a certain set of git projects have been cloned.
 (Whether those projects work or not is outside the scope of this test.)
 Then we destroy the docker testing instance.
 EOF
-) &&
+    ) &&
     (
 	vagrant destroy --force testing ||
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
@@ -55,7 +56,7 @@ EOF
     if [[ $((60*60)) -lt ${SECOND_SINCE_LAST_UPDATE} ]]
     then
 	echo We are failing because the last dnf update was done ${LAST_UPDATED}. &&
-	exit 64 &&
+	    exit 64 &&
 	    true
     fi &&
     echo There is a docker command. &&
@@ -86,7 +87,7 @@ EOF
     [[ ${GITEMAIL} == $(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##") ]] &&
     echo let us dockerize for verification &&
     vagrant ssh testing -- mkdir --parents /home/fedora/testing/desertedscorpion
-    echo Let us test with a simple node express hello world application &&
+echo Let us test with a simple node express hello world application &&
     vagrant ssh testing -- git -C /home/fedora/testing/desertedscorpion clone git@github.com:desertedscorpion/subtleostrich.git &&
     echo build the docker image from the Dockerfile &&
     vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict ." &&

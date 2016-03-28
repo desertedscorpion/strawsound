@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export DOCKER_USERID=$(cat private/initial/docker/docker_userid) &&
+    BRANCH=export BRANCH=$(git rev-parse --abbrev-ref HEAD) &&
     export DOCKER_PASSWORD=$(cat private/initial/docker/docker_password) &&
     export DOCKER_EMAIL=$(cat private/initial/docker/docker_email) &&
     export ACCESS_KEY_ID=$(cat private/initial/aws/access_key_id) &&
