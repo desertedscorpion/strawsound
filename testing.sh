@@ -22,7 +22,13 @@ function finish(){
 	true
 } &&
     trap finish EXIT &&
-    source /usr/local/src/private/credentials.sh &&
+    export DOCKER_USERID=$(cat private.testing/docker_userid) &&
+    export DOCKER_PASSWORD=$(cat private.testing/docker_password) &&
+    export DOCKER_EMAIL=$(cat private.testing/docker_email) &&
+    export ACCESS_KEY_ID=$(cat private.testing/access_key_id) &&
+    export SECRET_ACCESS_KEY=$(cat private.testing/secret_access_key) &&
+    export GITHUB_STRAWSOUND_PRIVATE_SSH_KEY=$(cat private.testing/OpGlyegL_id_rsa) &&
+    export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private.testing/OpGlyegL_id_rsa) &&
     (cat <<EOF
 Test the docker provisioning script.
 We destroy the docker testing instance (if it exists).
@@ -84,35 +90,8 @@ EOF
     ) &&
     echo build the docker image from the Dockerfile &&
     vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld ." &&
-    echo verify that the image was created correctly and that the image file contains a repository we can push to && 
-    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker images" > ${WORK_DIR}/images.txt 2>&1 &&
-    (cat <<EOF
-We are testing that the images output has 3 lines and the second line has the test image repository.
-The output should look like
-
-REPOSITORY                                         TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld   latest              3054725ef24a        13 minutes ago      490.4 MB
-docker.io/centos                                   centos6             ed452988fb6e        19 hours ago        228.9 MB
-
-
-THe first line is just header.
-The second line is about our test project.
-The third line is a layer underneath our test project.
-EOF
-     ) &&
-    if [[ "3" != $(wc --lines ${WORK_DIR}/images.txt | cut --fields 1 --delimiter " ") ]]
-    then
-	echo the images should consist of 3 lines &&
-	    cat ${WORK_DIR}/images.txt &&
-	    exit 64 &&
-	    true
-    elif [[ "taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld" != $(head ${WORK_DIR}/images.txt --lines 2 | tail --lines 1 | cut --fields 1 --delim " ") ]]
-    then
-	echo the images should have the test repository &&
-	    cat ${WORK_DIR}/images.txt &&
-	    exit 64 &&
-	    true
-    fi &&
+    echo verify that the image was created correctly and that the image file contains a repository we can push to &&
+    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker images | grep taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld" &&
     vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
     vagrant ssh testing -- "curl -s http://localhost:3000" > ${WORK_DIR}/curl.txt 2>&1 &&
     if [[ "Hello World!" != "$(cat ${WORK_DIR}/curl.txt)" ]]
@@ -121,143 +100,10 @@ EOF
 	    exit 64
 	    true
     fi &&
-    (cat <<EOF
-Let us verify that all our working stuff is there.
-EOF
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working ]]" || (
-	    echo no working directory &&
-		exit 69 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working/jenkins-docker/.git ]]" || (
-	echo no working/jenkins-docker directory &&
-	    exit 70 &&
-	    true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/jenkins-docker branch)\" ]]" || (
-	    echo no working/jenkins-docker master &&
-		exit 71 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working/systemd/.git ]]" || (
-	    echo no working/systemd directory &&
-		exit 72 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/systemd branch)\" ]]" || (
-	    echo no working/systemd master &&
-	    exit 73 &&
-	    true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/abandonnedsmoke/.git ]]" || (
-	    echo no working/desertedscorpion/abandonnedsmoke directory &&
-		exit 74 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/abandonnedsmoke branch)\" ]]" || (
-	    echo no working/desertedscorpion/abandonnedsmoke master &&
-	    exit 75 &&
-	    true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/strawsound/.git ]]" || (
-	    echo no working/desertedscorpion/strawsound directory &&
-		exit 74 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/strawsound branch)\" ]]" || (
-	    echo no working/desertedscorpion/strawsound master &&
-	    exit 75 &&
-	    true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/needlessbeta/.git ]]" || (
-	    echo no working/desertedscorpion/needlessbeta directory &&
-		exit 74 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/needlessbeta branch)\" ]]" || (
-	    echo no working/desertedscorpion/needlessbeta master &&
-	    exit 75 &&
-	    true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/braveoyster/.git ]]" || (
-	    echo no working/desertedscorpion/braveoyster directory &&
-		exit 74 &&
-		true
-	) &&
-	    true
-    ) &&
-    (
-	vagrant ssh testing -- "[[ \"* master\" == \"\$(git -C /home/fedora/working/desertedscorpion/braveoyster branch)\" ]]" || (
-	    echo no working/desertedscorpion/braveoyster master &&
-	    exit 75 &&
-	    true
-	) &&
-	    true
-    ) &&
     GIT_NAME=$(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") &&    
     echo verify git is configured with my name \"${GIT_NAME}\" &&
     [[ "Emory Merryman" == ${GIT_NAME} ]] &&
     GIT_EMAIL=$(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##" -e "s#[+].*@#@#") &&
     echo verify git is configured with my email \"${GIT_EMAIL}\" &&
     [[ "emory.merryman@gmail.com" == ${GIT_EMAIL} ]] &&
-    echo verify emacs is installed &&
-    vagrant ssh testing -- which emacs &&
-#    vagrant ssh testing -- "if [[ \"/usr/bin/emacs\" != \"\$(which emacs)\" ]] ; then echo no emacs && exit 66; fi" &&
-    (
-	vagrant ssh testing -- "[[ \"Username: ${DOCKER_USERID}\" == \"\$(docker info | grep Username)\" ]]" || (
-	    echo not logged into docker &&
-		exit 74 &&
-		true
-	) &&
-	    true
-    ) &&
-    echo verify nodejs is installed &&
-    vagrant ssh testing -- which node &&
-    echo verify npm is installed &&
-    vagrant ssh testing -- which npm &&
-    echo verify Xfvb is installed &&
-    vagrant ssh testing -- which Xvfb &&
-    echo verify recordmydesktop is installed &&
-    vagrant ssh testing -- which recordmydesktop &&
-    echo verify firefox is installed &&
-    vagrant ssh testing -- which firefox &&
-    (
-	vagrant destroy --force testing ||
-	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
-    ) &&
     true
