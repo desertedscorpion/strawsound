@@ -54,13 +54,13 @@ EOF
     SECONDS_SINCE_LAST_UPDATE=$(($(vagrant ssh testing -- date +s)-$(date --date "${LAST_UPDATED}" +s))) &&
     if [[ $((60*60)) -lt ${SECOND_SINCE_LAST_UPDATE} ]]
     then
-	echo We are failing because the last dnf update was done ${LAST_UPDATED}.
+	echo We are failing because the last dnf update was done ${LAST_UPDATED}. &&
 	exit 64 &&
 	    true
     fi &&
     echo There is a docker command. &&
     vagrant ssh testing -- which docker &&
-    echo Verify that we mounted a volume on /var/lib
+    echo Verify that we mounted a volume on /var/lib &&
     (
 	[[ ! -z "$(vagrant ssh testing -- "df" | grep /dev/xvdf | grep /var/lib)" ]] || (
 	    echo no volume &&
@@ -97,7 +97,7 @@ EOF
     if [[ "Hello World!" != "$(cat ${WORK_DIR}/curl.txt)" ]]
     then
 	echo the server did not work &&
-	    exit 64
+	    exit 64 &&
 	    true
     fi &&
     true
