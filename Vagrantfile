@@ -32,7 +32,7 @@ Vagrant.configure(2) do |config|
       aws.tags = {
         "Name" => "docker",
         "Environment" => "testing",
-        "Branch" => ["BRANCH"]
+        "Branch" => ENV["BRANCH"]
       }
       aws.ami = "ami-02321068"
       override.ssh.username = "fedora"

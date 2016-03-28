@@ -85,7 +85,7 @@ Then we will create a new one.
 That way we can be sure there is only exactly one.
 EOF
     ) &&
-    echo INSTANCE_ID=\$(/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=tag:Branch,Values=${BRANCH}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8) &&
+    echo 'INSTANCE_ID=\$ OPEN_PAREN /usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=tag:Branch,Values=${BRANCH}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8 CLOSE_PAREN' &&
     INSTANCE_ID=$(/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=tag:Branch,Values=${BRANCH}" "Name=instance-state-name,Values=running" | grep INSTANCES | cut --fields 8) &&
     /usr/local/bin/aws ec2 describe-volumes --filters "Name=tag:Name,Values=docker" "Name=tag:Environment,Values=${ENVIRONMENT}" "Name=tag:Branch,Values=${BRANCH}"  | grep VOLUMES | wc --lines | grep VOLUMES | cut --fields 2 | while read VOLUME_ID
     do
