@@ -6,6 +6,7 @@ ENVIRONMENT="${1}" &&
     DOCKER_EMAIL="${4}" &&
     ACCESS_KEY_ID="${5}" &&
     SECRET_ACCESS_KEY="${6}" &&
+    XSGYYMPH = "${7}" &&
     (cat <<EOF
 Install and configure docker.
 Environment is ${ENVIRONMENT}.
@@ -177,6 +178,11 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke remote add github git@github.com:desertedscorpion/abandonnedsmoke.git" &&
     su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke fetch github master" &&
     su --login fedora --command "git -C working/desertedscorpion/abandonnedsmoke checkout master" &&
+    su --login fedora --command "mkdir working/desertedscorpion/abandonnedsmoke/private" &&
+    su --login fedora --command "touch working/desertedscorpion/abandonnedsmoke/private/xSGyYmpH_id_rsa" &&
+    echo "${XSGYYMPH}" > working/desertedscorpion/abandonnedsmoke/private/xSGyYmpH_id_rsa &&
+    
+    
     su --login fedora --command "git -C working/desertedscorpion/strawsound init" &&
     su --login fedora --command "git -C working/desertedscorpion/strawsound remote add github git@github.com:desertedscorpion/strawsound.git" &&
     su --login fedora --command "git -C working/desertedscorpion/strawsound fetch github master" &&

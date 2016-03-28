@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source /usr/local/src/private/credentials.sh &&
+    export XSGYYMPH = $(cat /usr/local/src/private/xSGyYmpH_id_rsa) &&
     (cat <<EOF
 Test the docker provisioning script.
 We destroy the docker testing instance (if it exists).
@@ -156,6 +157,14 @@ EOF
 	    echo no working/desertedscorpion/abandonnedsmoke master &&
 	    exit 75 &&
 	    true
+	) &&
+	    true
+    ) &&
+    (
+	vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/abandonnedsmoke/private ]] && [[ -f /home/fedora/working/desertedscorpion/abandonnedsmoke/private/xSGyYmpH_id_rsa  ]]" || (
+	    echo no private files &&
+		exit 74 &&
+		true
 	) &&
 	    true
     ) &&
