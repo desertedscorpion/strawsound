@@ -205,9 +205,19 @@ EOF
 	sleep 1m &&
 	    true
     done &&
-    echo create directories for private info &&
-    mkdir /home/fedora/working/desertedscorpion/{abandonnedsmoke,strawsound}/private &&
-    chown fedora:fedora /home/fedora/working/desertedscorpion/{abandonnedsmoke,strawsound}/private &&
+    echo hide secrets &&
+    mkdir /usr/local/src/private &&
+    (cat > /usr/local/src/private/credentials.sh <<EOF
+#!/bin/bash
+
+export ACCESS_KEY_ID=${ACCESS_KEY} &&
+    export SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY} &&
+    export DOCKER_USERID=${DOCKER_USERID} &&
+    export DOCKER_PASSWORD=${DOCKER_PASSWORD} &&
+    export DOCKER_EMAIL=${DOCKER_EMAIL} &&
+    true
+EOF
+    ) &&
     (cat <<EOF
 ENJOY!
 EOF

@@ -17,11 +17,6 @@ EOF
 	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
     ) &&
     time vagrant up testing --provider=aws &&
-    echo "copy private materials" &&
-    vagrant scp private/credentials.sh initial:/home/fedora/working/desertedscorpion/abandonnedsmoke/private &&
-    vagrant scp private/xSGyYmpH_id_rsa initial:/home/fedora/working/desertedscorpion/abandonnedsmoke/private &&
-    vagrant scp private/credentials.sh initial:/home/fedora/working/desertedscorpion/strawsound/private &&
-    vagrant scp private/xSGyYmpH_id_rsa initial:/home/fedora/working/desertedscorpion/strawsound/private &&
     echo The firewall is up and running. && 
     vagrant ssh testing -- "systemctl status firewalld.service | grep running" &&
     echo The instance was recently updated - within the last hour. &&
