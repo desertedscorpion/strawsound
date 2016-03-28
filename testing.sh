@@ -1,5 +1,27 @@
 #!/bin/bash
 
+(cat <<EOF
+Inspiration and reference:  http://redsymbol.net/articles/bash-exit-traps/
+I don't really understand traps and the below code is untested.
+
+The goal is that whenever the system finishes (even if it fails)
+it should destroy the testing machine.
+
+This is b/c we have found that multiple instances of the testing
+machine can confuse the tests and cause errors.
+
+If we are still having multiple instances of the testing machine,
+then this code is not working.
+EOF
+) &&
+function finish(){
+    (
+	vagrant destroy --force testing ||
+	    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
+    ) &&
+	true
+} &&
+    trap finish EXIT &&
 source /usr/local/src/private/credentials.sh &&
     export XSGYYMPH = $(cat /usr/local/src/private/xSGyYmpH_id_rsa) &&
     (cat <<EOF
