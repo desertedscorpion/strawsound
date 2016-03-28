@@ -68,7 +68,7 @@ EOF
 		true
 	)
     ) &&
-    echo The documer service is running. &&
+    echo The docker service is running. &&
     vagrant ssh testing -- "systemctl status docker.service | grep running" &&
     echo The regular user is a member of the docker group, so it can run without sudo. &&
     vagrant ssh testing -- "groups | grep docker" &&
@@ -81,20 +81,18 @@ Then we will try to use it.
 We are following http://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html to a large extent.
 EOF
     ) &&
-    vagrant ssh testing -- "mkdir testing" &&
-    WORK_DIR=$(mktemp -d) &&
-    tar --create --file ${WORK_DIR}/testing.tar testing &&
-    vagrant scp ${WORK_DIR}/testing.tar testing:/tmp &&
-    vagrant ssh testing -- "tar --extract --file /tmp/testing.tar" &&
-    (cat <<EOF
-Let us test with a simple node application.
-EOF
-    ) &&
+    echo verify git configuration &&
+    [[ ${GITNAME} == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") ]] &&    
+    [[ ${GITEMAIL} == $(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##") ]] &&
+    echo let us dockerize for verification &&
+    vagrant ssh testing -- mkdir --parents /home/fedora/testing/desertedscorpion
+    echo Let us test with a simple node express hello world application &&
+    vagrant ssh testing -- git clone /home/fedora/testing/desertedscorpion git@github.com:desertedscorpion/subtleostrich.git &&
     echo build the docker image from the Dockerfile &&
-    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld ." &&
+    vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict ." &&
     echo verify that the image was created correctly and that the image file contains a repository we can push to &&
-    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker images | grep taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld" &&
-    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/docker-helloworld && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
+    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker images | grep taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict" &&
+    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
     vagrant ssh testing -- "curl -s http://localhost:3000" > ${WORK_DIR}/curl.txt 2>&1 &&
     if [[ "Hello World!" != "$(cat ${WORK_DIR}/curl.txt)" ]]
     then
@@ -102,6 +100,4 @@ EOF
 	    exit 64
 	    true
     fi &&
-    [[ ${GITNAME} == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") ]] &&    
-    [[ ${GITEMAIL} == $(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##") ]] &&
     true

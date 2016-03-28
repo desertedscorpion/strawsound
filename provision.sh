@@ -125,7 +125,6 @@ EOF
     (cat <<EOF
 Install git.
 Configure git.
-Clone our repo from github.
 EOF
      ) &&
     while ! dnf install --assumeyes git
@@ -146,11 +145,12 @@ StrictHostKeyChecking no
 
 EOF
     ) &&
-    su --login fedora --command "git config --global user.name \"${GIT_NAME}\"" &&
-    su --login fedora --command "git config --global user.email emory.merryman+\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)@gmail.com" &&
     chown fedora:fedora /home/fedora/.ssh/config &&
     chmod 0600 /home/fedora/.ssh/config &&
+    su --login fedora --command "git config --global user.name \"${GITNAME}\"" &&
+    su --login fedora --command "git config --global user.email \"${GITEMAIL}\"" &&
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
+    cat configure docker &&
     su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
     echo ENJOY!!!!!! &&
     true
