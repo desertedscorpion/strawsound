@@ -87,7 +87,7 @@ EOF
     [[ ${GITEMAIL} == $(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##") ]] &&
     echo let us dockerize for verification &&
     vagrant ssh testing -- mkdir --parents /home/fedora/testing/desertedscorpion &&
-echo Let us test with a simple node express hello world application &&
+    echo Let us test with a simple node express hello world application &&
     vagrant ssh testing -- git -C /home/fedora/testing/desertedscorpion clone git@github.com:desertedscorpion/subtleostrich.git &&
     echo build the docker image from the Dockerfile &&
     vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict ." &&

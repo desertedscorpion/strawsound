@@ -143,7 +143,7 @@ EOF
 
 Host github.com
 User git
-IdentityFile  \${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
+IdentityFile  \${GITHUB_STRAWSOUND_SSH_KEYFILE}
 StrictHostKeyChecking no
 
 EOF
