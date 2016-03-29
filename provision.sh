@@ -137,13 +137,13 @@ EOF
     done &&
     GITHUB_STRAWSOUND_SSH_KEYFILE=$(mktemp /home/fedora/.ssh/XXXXXXXX_id_rsa) &&
     echo ${GITHUB_STRAWSOUND_PRIVATE_SSH_KEY} > \${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
-    chown fedora:fedora \${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
-    chmod 0600 \${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
+    chown fedora:fedora ${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
+    chmod 0600 ${GITHUB_STRAWSOUND_SSH_KEYFILE} &&
     (cat >> /home/fedora/.ssh/config <<EOF
 
 Host github.com
 User git
-IdentityFile  \${GITHUB_STRAWSOUND_SSH_KEYFILE}
+IdentityFile ${GITHUB_STRAWSOUND_SSH_KEYFILE}
 StrictHostKeyChecking no
 
 EOF
