@@ -1,6 +1,11 @@
 #!/bin/bash
 
-(cat <<EOF
+SELF_DESTRUCT=true &&
+    if [[ 0 -lt ${#} ]]
+    then
+	SELF_DESTRUCT=false;
+    fi &&
+    (cat <<EOF
 Inspiration and reference:  http://redsymbol.net/articles/bash-exit-traps/
 I don't really understand traps and the below code is untested.
 
@@ -16,8 +21,13 @@ EOF
 ) &&
     function finish(){
 	(
-	    vagrant destroy --force testing ||
-		echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK"
+	    if [[ ${SELF_DESTRUCT} ]]
+	    then
+		vagrant destroy --force testing ||
+		    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK" &&
+			true
+	    fi &&
+		true
 	) &&
 	    true
     } &&
@@ -51,8 +61,8 @@ EOF
     echo The firewall is up and running. && 
     vagrant ssh testing -- "systemctl status firewalld.service | grep running" &&
     echo The instance was recently updated - within the last hour. &&
-    LAST_UPDATED=$(vagrant ssh testing -- sudo dnf update --assumeyes | grep "Last metadata expiration check performed" | sed -e "s#^Last metadata expiration check performed .* ago on \(.*\)[.]\$#\1#") &&
-    SECONDS_SINCE_LAST_UPDATE=$(($(vagrant ssh testing -- date +s)-$(date --date "${LAST_UPDATED}" +s))) &&
+    LAST_UPDATED=$(vagrant ssh testing -- "sudo dnf update --assumeyes" | grep "Last metadata expiration check performed" | sed -e "s#^Last metadata expiration check performed .* ago on \(.*\)[.]\$#\1#") &&
+    SECONDS_SINCE_LAST_UPDATE=$(($(vagrant ssh testing -- "date +s")-$(date --date "${LAST_UPDATED}" +s))) &&
     if [[ $((60*60)) -lt ${SECOND_SINCE_LAST_UPDATE} ]]
     then
 	echo We are failing because the last dnf update was done ${LAST_UPDATED}. &&
@@ -60,10 +70,10 @@ EOF
 	    true
     fi &&
     echo There is a docker command. &&
-    vagrant ssh testing -- which docker &&
+    vagrant ssh testing -- "which docker" &&
     echo Verify that we mounted a volume on /var/lib &&
     (
-	[[ ! -z "$(vagrant ssh testing -- "df" | grep /dev/xvdf | grep /var/lib)" ]] || (
+	[[ ! -z "$(vagrant ssh testing -- df | grep /dev/xvdf | grep /var/lib)" ]] || (
 	    echo no volume &&
 		exit 68 &&
 		true
@@ -83,12 +93,12 @@ We are following http://docs.aws.amazon.com/AmazonECS/latest/developerguide/dock
 EOF
     ) &&
     echo verify git configuration &&
-    [[ ${GITNAME} == $(vagrant ssh testing -- grep name .gitconfig | sed -e "s#^\s*name\s*=\s*##") ]] &&    
-    [[ ${GITEMAIL} == $(vagrant ssh testing -- grep email .gitconfig | sed -e "s#^\s*email\s*=\s*##") ]] &&
+    [[ ${GITNAME} == $(vagrant ssh testing -- "grep name .gitconfig" | sed -e "s#^\s*name\s*=\s*##") ]] &&    
+    [[ ${GITEMAIL} == $(vagrant ssh testing -- "grep email .gitconfig" | sed -e "s#^\s*email\s*=\s*##") ]] &&
     echo let us dockerize for verification &&
-    vagrant ssh testing -- mkdir --parents /home/fedora/testing/desertedscorpion &&
+    vagrant ssh testing -- "mkdir --parents /home/fedora/testing/desertedscorpion" &&
     echo Let us test with a simple node express hello world application &&
-    vagrant ssh testing -- git -C /home/fedora/testing/desertedscorpion clone git@github.com:desertedscorpion/subtleostrich.git &&
+    vagrant ssh testing -- "git -C /home/fedora/testing/desertedscorpion clone git@github.com:desertedscorpion/subtleostrich.git" &&
     echo build the docker image from the Dockerfile &&
     vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict ." &&
     echo verify that the image was created correctly and that the image file contains a repository we can push to &&
