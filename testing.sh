@@ -1,11 +1,6 @@
 #!/bin/bash
 
-SELF_DESTRUCT=true &&
-    if [[ 0 -lt ${#} ]]
-    then
-	SELF_DESTRUCT=false;
-    fi &&
-    (cat <<EOF
+(cat <<EOF
 Inspiration and reference:  http://redsymbol.net/articles/bash-exit-traps/
 I don't really understand traps and the below code is untested.
 
@@ -21,13 +16,9 @@ EOF
 ) &&
     function finish(){
 	(
-	    if [[ ${SELF_DESTRUCT} ]]
-	    then
-		vagrant destroy --force testing ||
-		    echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK" &&
-			true
-	    fi &&
-		true
+	    vagrant destroy --force testing ||
+		echo "I really do not know why this fails from time to time, but as long as the instance is destroyed it is OK" &&
+		    true
 	) &&
 	    true
     } &&
@@ -86,15 +77,17 @@ EOF
     echo Verify that the regular user can run without sudo. &&
     sleep 1m &&
     vagrant ssh testing -- "docker info" &&
+    echo verify git configuration &&
+    [[ ${GITNAME} == $(vagrant ssh testing -- "grep name .gitconfig" | sed -e "s#^\s*name\s*=\s*##") ]] &&    
+    [[ ${GITEMAIL} == $(vagrant ssh testing -- "grep email .gitconfig" | sed -e "s#^\s*email\s*=\s*##") ]] &&
+    vagrant ssh testing -- "stat /home/fedora/.ssh" &&
+    vagrant ssh testing -- "cat /home/fedora/.ssh" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.
 We are following http://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html to a large extent.
 EOF
     ) &&
-    echo verify git configuration &&
-    [[ ${GITNAME} == $(vagrant ssh testing -- "grep name .gitconfig" | sed -e "s#^\s*name\s*=\s*##") ]] &&    
-    [[ ${GITEMAIL} == $(vagrant ssh testing -- "grep email .gitconfig" | sed -e "s#^\s*email\s*=\s*##") ]] &&
     echo let us dockerize for verification &&
     vagrant ssh testing -- "mkdir --parents /home/fedora/testing/desertedscorpion" &&
     echo Let us test with a simple node express hello world application &&
