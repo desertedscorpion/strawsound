@@ -81,7 +81,8 @@ EOF
     [[ ${GITNAME} == $(vagrant ssh testing -- "grep name .gitconfig" | sed -e "s#^\s*name\s*=\s*##") ]] &&    
     [[ ${GITEMAIL} == $(vagrant ssh testing -- "grep email .gitconfig" | sed -e "s#^\s*email\s*=\s*##") ]] &&
     vagrant ssh testing -- "stat /home/fedora/.ssh" &&
-    vagrant ssh testing -- "cat /home/fedora/.ssh" &&
+    vagrant ssh testing -- "stat /home/fedora/.ssh/config" &&
+    vagrant ssh testing -- "cat /home/fedora/.ssh/config" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.
