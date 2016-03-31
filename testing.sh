@@ -83,6 +83,10 @@ EOF
     vagrant ssh testing -- "stat /home/fedora/.ssh" &&
     vagrant ssh testing -- "stat /home/fedora/.ssh/config" &&
     vagrant ssh testing -- "cat /home/fedora/.ssh/config" &&
+    IDENTITY_FILE=$(vagrant ssh testing -- "grep IdentityFile /home/fedora/.ssh/config | cut --fields 2 --delimiter \" \"") &&
+    echo IDENTITY_FILE=${IDENTITY_FILE} &&
+    vagrant ssh testing -- "stat ${IDENTITY_FILE}" &&
+    vagrant ssh testing -- "cat ${IDENTITY_FILE}" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.
