@@ -90,6 +90,8 @@ EOF
     vagrant ssh testing -- "[[ -d /home/fedora/running ]]" &&
     echo verify that we have a working directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working ]]" &&
+    echo verify that we have a desertedscorpion organization folder &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion ]]" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.
