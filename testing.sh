@@ -98,12 +98,12 @@ EOF
     echo Let us test with a simple node express hello world application &&
     vagrant ssh testing -- "git -C /home/fedora/testing/desertedscorpion clone git@github.com:desertedscorpion/subtleostrich.git" &&
     echo build the docker image from the Dockerfile &&
-    vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict ." &&
+    vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker build -t taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrich ." &&
     echo verify that the image was created correctly and that the image file contains a repository we can push to &&
-    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker images | grep taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict" &&
-    vagrant ssh testing -- "cd /home/fedora/testing/helloworld && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrict && echo ${?}" > ${WORK_DIR}/run.txt 2>&1 &&
-    vagrant ssh testing -- "curl -s http://localhost:3000" > ${WORK_DIR}/curl.txt 2>&1 &&
-    if [[ "Hello World!" != "$(cat ${WORK_DIR}/curl.txt)" ]]
+    vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker images | grep taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrich" &&
+    vagrant ssh testing -- "cd /home/fedora/testing/desertedscorpion/subtleostrich && docker run -p 3000:3000 -d taf7lwappqystqp4u7wjsqkdc7dquw/homelessbreeze_subtleostrich && echo ${?}" &&
+    vagrant ssh testing -- "curl -s http://localhost:3000" > curl.txt 2>&1 &&
+    if [[ "Hello World!" != "$(cat curl.txt)" ]]
     then
 	echo the server did not work &&
 	    exit 64 &&
