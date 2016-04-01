@@ -98,6 +98,9 @@ EOF
     echo verify that we have a needless beta working directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/needlessbeta ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/needlessbeta/.git ]]" &&
+    echo verify that we have a scatteredvegetable working directory &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredvegetable ]]" &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredvegetable/.git ]]" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.

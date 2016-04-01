@@ -160,5 +160,6 @@ EOF
     su --login fedora --command "mkdir working/desertedscorpion" &&
     su --login fedora --command "git -C /home/fedora/working/desertedscorpion clone git@github.com:desertedscorpion/strawsound.git" && 
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/needlessbeta.git"
+    su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/scatteredvegetable.git"
     echo ENJOY!!!!!! &&
     true
