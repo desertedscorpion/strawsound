@@ -158,5 +158,6 @@ EOF
     su --login fedora --command "mkdir /home/fedora/running" &&
     su --login fedora --command "mkdir working" &&
     su --login fedora --command "mkdir working/desertedscorpion" &&
+    su --login fedora --command "git -C /home/fedora/working/desertedscorpion clone git@github.com:desertedscorpion/strawsound.git" && 
     echo ENJOY!!!!!! &&
     true
