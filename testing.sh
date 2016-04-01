@@ -98,6 +98,9 @@ EOF
     echo verify that we have a needless beta working directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/needlessbeta ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/needlessbeta/.git ]]" &&
+    echo verify that we have a working abandonnedsmoke directory &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/abandonnedsmoke ]]" &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/abandonnedsmoke/.git ]]" &&
     echo verify that we have a scatteredvegetable working directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredvegetable ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredvegetable/.git ]]" &&
