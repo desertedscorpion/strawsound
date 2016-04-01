@@ -165,5 +165,7 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/bittercat.git" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_systemd" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_jenkins" &&
+    echo this last command is not auto-tested.  it should be manually tested. &&
+    su --login fedora --command "docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 8080:8080 ${DOCKER_USERID}/grimdog_jenkins" &&
     echo ENJOY!!!!!! &&
     true
