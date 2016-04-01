@@ -13,7 +13,8 @@ Vagrant.configure(2) do |config|
       aws.availability_zone = "us-east-1a"
       aws.tags = {
         "Name" => "docker",
-        "Environment" => "initial"
+        "Environment" => "initial",
+        "Branch" => ENV["BRANCH"]
       }
       aws.ami = "ami-02321068"
       override.ssh.username = "fedora"
