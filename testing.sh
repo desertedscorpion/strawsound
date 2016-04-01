@@ -77,6 +77,7 @@ EOF
     echo Verify that the regular user can run without sudo. &&
     sleep 1m &&
     vagrant ssh testing -- "docker info" &&
+    vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_systemd" &&
     echo verify git configuration &&
     [[ ${GITNAME} == $(vagrant ssh testing -- "grep name .gitconfig" | sed -e "s#^\s*name\s*=\s*##") ]] &&    
     [[ ${GITEMAIL} == $(vagrant ssh testing -- "grep email .gitconfig" | sed -e "s#^\s*email\s*=\s*##") ]] &&
