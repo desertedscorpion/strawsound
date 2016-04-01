@@ -87,6 +87,7 @@ EOF
     echo IDENTITY_FILE=${IDENTITY_FILE} &&
     vagrant ssh testing -- "stat ${IDENTITY_FILE}" &&
     vagrant ssh testing -- "cat ${IDENTITY_FILE}" &&
+    vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&
     vagrant ssh testing -- "[[ -d /home/fedora/running ]]" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
