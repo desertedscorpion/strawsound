@@ -88,6 +88,8 @@ EOF
     vagrant ssh testing -- "stat ${IDENTITY_FILE}" &&
     vagrant ssh testing -- "cat ${IDENTITY_FILE}" &&
     vagrant ssh testing -- "[[ -d /home/fedora/running ]]" &&
+    echo verify that we have a working directory &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working ]]" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.

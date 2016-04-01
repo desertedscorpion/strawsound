@@ -156,5 +156,6 @@ EOF
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
     su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
     su --login fedora --command "mkdir /home/fedora/running" &&
+    su --login fedora --command "mkdir working" &&
     echo ENJOY!!!!!! &&
     true
