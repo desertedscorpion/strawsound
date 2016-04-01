@@ -155,5 +155,6 @@ EOF
     echo configure docker &&
     su --login fedora --command "echo docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
     su --login fedora --command "docker login --username ${DOCKER_USERID} --password ${DOCKER_PASSWORD} --email ${DOCKER_EMAIL} https://index.docker.io/v1/" &&
+    su --login fedora --command "mkdir /home/fedora/running" &&
     echo ENJOY!!!!!! &&
     true
