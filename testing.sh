@@ -104,6 +104,7 @@ EOF
     echo verify that we have a working bittercat directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/bittercat ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/bittercat/.git ]]" &&
+    vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_systemd" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.

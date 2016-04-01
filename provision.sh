@@ -162,6 +162,7 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/needlessbeta.git"
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/scatteredvegetable.git"
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/bittercat.git" &&
+    su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_systemd" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_jenkins" &&
     echo ENJOY!!!!!! &&
     true
