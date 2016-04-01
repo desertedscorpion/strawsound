@@ -101,6 +101,7 @@ EOF
     echo verify that we have a scatteredvegetable working directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredvegetable ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredvegetable/.git ]]" &&
+    vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.

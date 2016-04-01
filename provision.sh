@@ -158,8 +158,9 @@ EOF
     su --login fedora --command "mkdir /home/fedora/running" &&
     su --login fedora --command "mkdir working" &&
     su --login fedora --command "mkdir working/desertedscorpion" &&
-    su --login fedora --command "git -C /home/fedora/working/desertedscorpion clone git@github.com:desertedscorpion/strawsound.git" && 
+    su --login fedora --command "git -C /home/fedora/working/desertedscorpion clone git@github.com:desertedscorpion/strawsound.git" &&
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/needlessbeta.git"
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/scatteredvegetable.git"
+    su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_jenkins" &&
     echo ENJOY!!!!!! &&
     true
