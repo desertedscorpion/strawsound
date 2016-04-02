@@ -110,6 +110,9 @@ EOF
     echo verify that we have a working bittercat directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/bittercat ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/bittercat/.git ]]" &&
+    echo verify that we have a working scatteredfinger directory &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredfinger ]]" &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/scatteredfinger/.git ]]" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_systemd" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&
     echo verify we have emacs &&

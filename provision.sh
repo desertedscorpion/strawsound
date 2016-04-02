@@ -166,6 +166,7 @@ EOF
 	su --login fedora --command "chmod 0500 working/desertedscorpion/abandonnedsmoke/private" &&
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/scatteredvegetable.git"
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/bittercat.git" &&
+    su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/scatteredfinger.git" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_systemd" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_jenkins" &&
     echo this last command is not auto-tested.  it should be manually tested. &&
