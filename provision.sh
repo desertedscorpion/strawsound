@@ -173,5 +173,7 @@ EOF
     su --login fedora --command "docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 8080:8080 ${DOCKER_USERID}/grimdog_jenkins" &&
     echo add emacs &&
     dnf install --assumeyes emacs &&
+    echo add nodejs and npm &&
+    dnf install --assumeyes nodejs npm &&
     echo ENJOY!!!!!! &&
     true

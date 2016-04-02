@@ -117,6 +117,9 @@ EOF
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&
     echo verify we have emacs &&
     vagrant ssh testing -- "which emacs" &&
+    echo verify we have nodejs and npm &&
+    vagrant ssh testing -- "which node" &&
+    vagrant ssh testing -- "which npm" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.
