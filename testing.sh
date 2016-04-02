@@ -109,6 +109,8 @@ EOF
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/bittercat/.git ]]" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_systemd" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&
+    echo verify we have emacs &&
+    vagrant ssh testing -- "which emacs" &&
     (cat <<EOF
 Here we are cloning a simple hello world application.
 Then we will try to use it.

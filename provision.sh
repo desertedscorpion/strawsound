@@ -167,5 +167,7 @@ EOF
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_jenkins" &&
     echo this last command is not auto-tested.  it should be manually tested. &&
     su --login fedora --command "docker run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 8080:8080 ${DOCKER_USERID}/grimdog_jenkins" &&
+    echo add emacs &&
+    dnf install --assumeyes emacs &&
     echo ENJOY!!!!!! &&
     true
