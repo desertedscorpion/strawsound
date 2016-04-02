@@ -29,13 +29,13 @@ GITEMAIL=${GITEMAIL}
 
 We need to install, start, and enable firewalld because the minimal fedora cloud image does not have it.
 EOF
-) &&
+    ) &&
     while ! dnf install --assumeyes firewalld
     do
 	sleep 60s &&
 	    true
     done
-    systemctl start firewalld.service &&
+systemctl start firewalld.service &&
     systemctl enable firewalld.service &&
     (cat <<EOF
 Update the system
@@ -49,7 +49,7 @@ EOF
     (cat <<EOF
 Install aws command line tools.
 EOF
-     ) &&
+    ) &&
     while ! dnf install --assumeyes zip python wget
     do
 	sleep 60s &&
@@ -61,7 +61,7 @@ EOF
 	sleep 60s &&
 	    true
     done
-    unzip awscli-bundle.zip &&
+unzip awscli-bundle.zip &&
     ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws &&
     (cat <<EOF
 ${ACCESS_KEY_ID}
@@ -129,7 +129,7 @@ EOF
 Install git.
 Configure git.
 EOF
-     ) &&
+    ) &&
     while ! dnf install --assumeyes git
     do
 	sleep 1m &&
@@ -159,7 +159,7 @@ EOF
     su --login fedora --command "mkdir working" &&
     su --login fedora --command "mkdir working/desertedscorpion" &&
     su --login fedora --command "git -C /home/fedora/working/desertedscorpion clone git@github.com:desertedscorpion/strawsound.git" &&
-    su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/needlessbeta.git"
+    su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/needlessbeta.git" &&
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/abandonnedsmoke.git" &&
 	echo create a private directory for abandonnedsmoke &&
 	su --login fedora --command "mkdir working/desertedscorpion/abandonnedsmoke/private" &&
