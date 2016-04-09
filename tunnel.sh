@@ -10,5 +10,5 @@ export BRANCH=$(git rev-parse --abbrev-ref HEAD) &&
     export GITHUB_STRAWSOUND_PUBLIC_SSH_KEY=$(cat private/initial/github/strawsound_id_rsa.pub) &&
     export GITNAME=$(cat private/initial/git/name) &&
     export GITEMAIL=$(private/initial/git/email.sh) &&
-    ssh -i private/initial/aws/docker.pem -L 127.0.0.1:8080:127.0.0.1:8080 -o StrictHostKeyChecking=no -N -l fedora $(vagrant ssh initial -- curl http://instance-data/latest/meta-data/public-ipv4) &&
+    ssh -i private/initial/aws/docker.pem -L 127.0.0.1:8080:127.0.0.1:8080 -L 127.0.0.1:29615:127.0.0.1:29615 -o StrictHostKeyChecking=no -N -l fedora $(vagrant ssh initial -- curl http://instance-data/latest/meta-data/public-ipv4) &&
     true
