@@ -116,6 +116,9 @@ EOF
     echo verify that we have a working dinosaurintense directory &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/dinosaurintense ]]" &&
     vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/dinosaurintense/.git ]]" &&
+    echo verify that we have a working navyclown directory &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/navyclown ]]" &&
+    vagrant ssh testing -- "[[ -d /home/fedora/working/desertedscorpion/navyclown/.git ]]" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_base" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_systemd" &&
     vagrant ssh testing -- "docker images | grep ${DOCKER_USERID}/grimdog_jenkins" &&

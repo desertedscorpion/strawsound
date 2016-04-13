@@ -168,6 +168,7 @@ EOF
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/bittercat.git" &&
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/scatteredfinger.git" &&
     su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/dinosaurintense.git" &&
+    su --login fedora --command "git -C working/desertedscorpion clone git@github.com:desertedscorpion/navyclown.git" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_base" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_systemd" &&
     su --login fedora --command "docker pull ${DOCKER_USERID}/grimdog_jenkins" &&
